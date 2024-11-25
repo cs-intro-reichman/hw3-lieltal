@@ -6,7 +6,7 @@
 public class Algebra {
 	public static void main(String args[]) {
 	    // Tests some of the operations
-	    System.out.println(plus(2,3));   // 2 + 3
+	    System.out.println(plus(-1,1));   // 2 + 3
 	    System.out.println(minus(7,2));  // 7 - 2
    		System.out.println(minus(2,7));  // 2 - 7
  		System.out.println(times(3,4));  // 3 * 4
@@ -25,12 +25,13 @@ public class Algebra {
 
 	// Returns x1 + x2
 	public static int plus(int x1, int x2) {
+		int absX2 = abs(x2);
 		if (x2 > 0) {
-			for (int i = 0; i < x2; i++) {
+			for (int i = 0; i < absX2; i++) {
 				x1++;
 			}
 		} else {
-			for (int i = 0; i > x2; i--) {
+			for (int i = 0; i < absX2; i++) {
 				x1--;
 			}
 		}
@@ -39,19 +40,37 @@ public class Algebra {
 
 	// Returns x1 - x2
 	public static int minus(int x1, int x2) {
-		for(int i = 0; i < x2; i++ ) {
-			x1--;
+		int absX2 = abs(x2);
+		if (x2 < 0) {
+			for (int i = 0; i < absX2; i++) {
+				x1++;
+			}
+		} else {
+			for (int i = 0; i < absX2; i++) {
+				x1--;
+			}
 		}
-		return x1;		
+		return x1;
 	}
 
 	// Returns x1 * x2
 	public static int times(int x1, int x2) {
 		int sum = 0;
-		for(int i = 0; i < x2; i++ ) {
+
+		boolean isNegative = (x1 < 0 && x2 > 0) || (x1 > 0 && x2 < 0);
+	
+		x1 = abs(x1);
+		x2 = abs(x2);
+	
+		for (int i = 0; i < x2; i++) {
 			sum = plus(sum, x1);
 		}
-		return sum;		
+	
+		if (isNegative) {
+			sum = minus(0, sum);
+		}
+	
+		return sum;
 	}
 
 	// Returns x^n (for n >= 0)
@@ -65,27 +84,24 @@ public class Algebra {
 
 	// Returns the integer part of x1 / x2 
 	public static int div(int x1, int x2) {
-		boolean isNegative = false;
-		int count = 0;
-
-		if (x1 < 0) {
-			x1 = minus(0, x1);
-			isNegative = true;
-		}
-		if (x2 < 0) {
-			x2 = minus(0, x2);
-			isNegative = true;
-		}
-	
-		while(x1 >= x2) {
-			count++;
-			x1 = minus(x1, x2);
-		}
 		
-		if (isNegative) {
-			count = minus(0, count);
-		}
-		return count;	
+    boolean isNegative = (x1 < 0 && x2 > 0) || (x1 > 0 && x2 < 0);
+
+    x1 = abs(x1);
+    x2 = abs(x2);
+
+    int count = 0;
+
+    while (x1 >= x2) {
+        count++;
+        x1 = minus(x1, x2);
+    }
+
+    if (isNegative) {
+        count = minus(0, count);
+    }
+
+    return count;
 	}
 
 	// Returns x1 % x2
@@ -103,5 +119,9 @@ public class Algebra {
 			sqrt++;
 		}
 		return sqrt -1;
-	}	  	  
+	}	  
+	
+	public static int abs(int x) {
+		return (x < 0) ? -x : x;
+	}
 }
